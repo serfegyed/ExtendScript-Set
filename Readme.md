@@ -21,7 +21,7 @@ It has all the standard Set methods as well as some additional ones are in some 
 * `keys()` - The keys() method is an alias for the values() method.
 * `values()` - Returns a new set iterator object that contains the values for each element in the set.
 
-## Additional non-standard methods
+## Non-standard methods
 *(They are mostly Array-like methods in some stage of tc39 proposal phase)*
 
 * `every()` - Checks if all elements in the set satisfy the provided callback function

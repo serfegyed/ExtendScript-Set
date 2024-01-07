@@ -1,4 +1,4 @@
-#include ".\\external.js";
+﻿#include ".\\external.js";
 
 /**
  * @title Set class - ExtendScript (ES3)
@@ -10,38 +10,44 @@
  *
  * @see https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Set/
  *
- * Methods for the Set object:
- *  - isSet() - Checks if an object is a Set.
- *  - isEmpty() - Determines whether the given parameter is an empty Set.
+ * Properties for the Set object:
+ * - size - Returns the number of elements in the set.
+ * 
+ * Standard methods for the Set object:
  *  - add(value) - Adds a value to the set.
- *  - has(value) - Checks if the given value exists in the set object or not.
- *  - delete(value) - Deletes the given value from the set.
  *  - clear() - Clears all element in the set and sets the size to 0.
- *  - values() - Returns a new set iterator object that contains the values for each element in the set.
- *  - keys() - The keys() method is an alias for the values() method.
+ *  - delete(value) - Deletes the given value from the set.
  *  - entries() - Returns a new set iterator object that contains the value/value pairs for each element in the set.
+ *  - forEach() - Iterates through each element of the set and applies a callback function.
+ *  - has(value) - Checks if the given value exists in the set object or not.
+ *  - keys() - The keys() method is an alias for the values() method.
+ *  - values() - Returns a new set iterator object that contains the values for each element in the set.
+ * 
+ * Non-standard methods for the Set object:
+ * (They are mostly Array-like methods in some stage of tc39 proposal phase)
+ *  - every() - Checks if all elements in the set satisfy the provided callback function
+ *  - filter() - Filters the elements of a Set object based on a provided callback function
+ *  - find() - Finds the first element in the set that satisfies the provided testing function
+ *  - from() - Adds values from iterable(s) and/or primitive(s)to the Set.
+ *  - isEmpty() - Determines whether the given parameter is an empty Set.
+ *  - isSet() - Checks if an object is a Set.
+ *  - map() - Applies a callback function to each element in the set and returns a new set with the results.
+ *  - reduce() - Reduce the set to a single value by applying a callback function
+ *  - some() - Checks if any element in the set satisfies the provided callback function
  *  - toArray() - Returns an array representation of the set.
  *  - toString() - Returns a string representation of the set.
- *  - forEach() - Iterates through each element of the set and applies a callback function.
- *  - from() - Adds values from iterable(s) and/or primitive(s)to the Set.
- *  - every() - Checks if all elements in the set satisfy the provided callback function
- *  - some() - Checks if any element in the set satisfies the provided callback function
- *  - filter() - Filters the elements of a Set object based on a provided callback function
- *  - map() - Applies a callback function to each element in the set and returns a new set with the results.
- *  - find() - Finds the first element in the set that satisfies the provided testing function
- *  - reduce() - Reduce the set to a single value by applying a callback function
- *  - union() - Returns a new Set with the union of the two sets
+ * 
+ * Set operations:
  *  - difference() - Calculates the difference between the current set and another set.
- *  - symmetricDifference() - Calculates the symmetric difference between this set and another set.
  *  - intersection() - Calculates the intersection of two sets.
- *  - isSubset() - Checks if the current set is a subset of another set
- *  - isSuperset() - Checks if the current set is a superset of another set
  *  - isDisjoint() - Checks if the current set is a disjoint of another set
  *  - isEqual() - Checks if the current set is equal to another set
+ *  - isSubset() - Checks if the current set is a subset of another set
+ *  - isSuperset() - Checks if the current set is a superset of another set
+ *  - symmetricDifference() - Calculates the symmetric difference between this set and another set.
+ *  - union() - Returns a new Set with the union of the two sets
  *
- * @external:   Array.isArray(), Array.isEmpty(), Array.prototype.toString()
- *              Object.isEmpty()
- *              isValueZero(), isPrimitive()
+ * @external:   Object.isEmpty(), sameValueZero(), isPrimitive()
  */
 /*************************************************************************************/
 /**
@@ -52,10 +58,10 @@
  */
 function Set(elements) {
     this._data = {};
-    this.size = 0;
+    this._size = 0;
 
     // Add initial values if provided during initialization
-    if (elements && (Array.isArray(elements) || Set.isSet(elements))) {
+    if (elements instanceof Array || elements instanceof Set) {
         this.from(elements);
     }
 }
@@ -67,7 +73,7 @@ function Set(elements) {
  * @return {boolean} Returns true if the object is a Set, otherwise returns false.
  */
 Set.isSet = function (obj) {
-    return typeof obj === "object" && obj instanceof Set;
+    return obj instanceof Set;
 };
 
 /**
@@ -78,8 +84,8 @@ Set.isSet = function (obj) {
  * @return {boolean} Returns true if the Set is empty, false otherwise.
  */
 Set.isEmpty = function (set) {
-    if (!Set.isSet(set)) throw new TypeError(set.toString() + " is not a Set");
-    return set.size === 0;
+    if (!set instanceof Set) throw new TypeError(set.toString() + " is not a Set");
+    return set.size() === 0;
 };
 
 /**
@@ -90,7 +96,7 @@ Set.isEmpty = function (set) {
  */
 Set.prototype.add = function (value) {
     if (!this.has(value)) {
-        this.size++;
+        this._size++;
     }
     this._data[value] = value;
     return this;
@@ -114,7 +120,7 @@ Set.prototype.has = function (value) {
 Set.prototype.delete = function (value) {
     if (this.has(value)) {
         delete this._data[value];
-        this.size--;
+        this._size--;
         return true;
     }
     return false;
@@ -128,7 +134,7 @@ Set.prototype.delete = function (value) {
  */
 Set.prototype.clear = function () {
     this._data = {};
-    this.size = 0;
+    this._size = 0;
 };
 
 /**
@@ -239,8 +245,15 @@ Set.prototype.toArray = function () {
  * @return {string} A string representation of the contents of the object.
  */
 Set.prototype.toString = function () {
-    var str = this.toArray().toString();
-    return "{" + str.slice(1, str.length - 1) + "}";
+    var str = "";
+    for (var value in this._data) {
+        if (str !== "") {
+            str += ", ";
+        };
+        str += (typeof value === 'string') ? '"' + value + '"' : value;
+    }
+
+    return "{" + str + "}";
 };
 
 /**
@@ -258,7 +271,7 @@ Set.prototype.from = function (iterables) {
         } else if (sameValueZero(iterable, NaN)) {
             this.add(iterable);
         } else if (iterable instanceof Array) {
-            if (!Array.isEmpty(iterable)) {
+            if (!!iterable.length) {
                 for (var i = 0; i < iterable.length; i++) {
                     this.add(iterable[i]);
                 }
@@ -381,7 +394,7 @@ Set.prototype.reduce = function (callback, initialValue) {
     if (typeof callback !== "function")
         throw new TypeError("Set.reduce(): Callback must be a function");
 
-    if (this.size === 0 && initialValue === undefined)
+    if (this.size() === 0 && initialValue === undefined)
         throw new TypeError("Set.reduce(): Empty Set without an initial value");
 
     var iterator = this.values();
@@ -504,7 +517,7 @@ Set.prototype.isSubset = function (otherSet) {
     if (!Set.isSet(otherSet)) {
         throw new TypeError("Set.isSubset(): wrong parameter type.");
     }
-    if (this.size > otherSet.size) {
+    if (this.size() > otherSet.size()) {
         return false;
     }
     if (Set.isEmpty(this)) {
@@ -536,7 +549,7 @@ Set.prototype.isSuperset = function (otherSet) {
     if (!Set.isSet(otherSet)) {
         throw new TypeError("Set.isSubset(): wrong parameter type.");
     }
-    if (this.size < otherSet.size) {
+    if (this.size() < otherSet.size()) {
         return false;
     }
     if (Set.isEmpty(otherSet)) {
@@ -588,7 +601,7 @@ Set.prototype.isEqual = function (otherSet) {
     if (!Set.isSet(otherSet)) {
         throw new TypeError("Set.isSubset(): wrong parameter type.");
     }
-    if (this.size !== otherSet.size) {
+    if (this.size() !== otherSet.size()) {
         return false;
     }
     if (Set.isEmpty(this) && Set.isEmpty(otherSet)) {
