@@ -5,28 +5,28 @@
 // Create a new set
 var mySet = new Set();
 $.writeln("Initialised without elements: " + mySet.toString());
-$.writeln("Size: " + mySet.size); // should print 0
+$.writeln("Size: " + mySet.size()); // should print 0
 
 var arr = [1, 2, 3, 4, 5];
 var mySet = new Set(arr);
 $.writeln("Initialised with array : " + arr.toString());
 $.writeln(mySet.toString());
-$.writeln("Size: " + mySet.size); // should print 5
+$.writeln("Size: " + mySet.size()); // should print 5
 
 // Test adding values to the set
 $.writeln(mySet.add("foo"));
 $.writeln(mySet.add("bar").add("baz")); // can chaining
-$.writeln("Size: " + mySet.size); // should print 8
+$.writeln("Size: " + mySet.size()); // should print 8
 $.writeln();
 
 // Test adding several elements
 var mySet = new Set();
 $.writeln(mySet.from(["foo", "bar", "baz"]));
-$.writeln("Size: " + mySet.size); // should print 3
+$.writeln("Size: " + mySet.size()); // should print 3
 var mySet2 = new Set();
 $.writeln(mySet2.from(["qux", "qix", "qax"]));
 $.writeln(mySet2.from(mySet));
-$.writeln("Size: " + mySet2.size); // should print 6
+$.writeln("Size: " + mySet2.size()); // should print 6
 $.writeln();
 
 // Test checking if values are in the set
@@ -36,7 +36,7 @@ $.writeln();
 
 // Test deleting values from the set
 $.writeln("Delete 'bar': ", mySet.delete("bar")); // true
-$.writeln("Size: " + mySet.size); // should print 2
+$.writeln("Size: " + mySet.size()); // should print 2
 $.writeln("Has 'bar': " + mySet.has("bar")); // should print false
 $.writeln("Delete 'bar': ", mySet.delete("bar")); // false
 $.writeln();
@@ -45,8 +45,8 @@ $.writeln();
 mySet.clear();
 mySet2.clear();
 $.writeln("Cleared set");
-$.writeln("Size: " + mySet.size); // should print 0
-$.writeln("Size: " + mySet2.size); // should print 0
+$.writeln("Size: " + mySet.size()); // should print 0
+$.writeln("Size: " + mySet2.size()); // should print 0
 $.writeln();
 
 // Test iterating over the set with forEach
@@ -134,7 +134,7 @@ var mySet = new Set();
 $.writeln("\nAdd some primitives: " + '1, "2", "string", NaN, null, Infinity, [], {}, undefined');
 mySet.from(1, "2", "string", NaN, null, Infinity, [], {}, undefined);
 $.writeln(mySet.toString()); // {1, "2", "string", NaN, null, Infinity, [], {}, undefined}
-$.writeln("Size: " + mySet.size); // should print 9
+$.writeln("Size: " + mySet.size()); // should print 9
 
 var mySet = new Set();
 var arr = [1, "2", "string", NaN, null, Infinity, [], {}, undefined];
@@ -142,7 +142,7 @@ $.writeln("\nAdd values of array: ");
 $.writeln(arr.toString());
 mySet.from(arr);
 $.writeln(mySet.toString()); // {1, "2", "string", NaN, null, Infinity, [], {}, undefined}
-$.writeln("Size: " + mySet.size); // should print 9
+$.writeln("Size: " + mySet.size()); // should print 9
 
 var mySet = new Set();
 var myObj = { name: "foo", age: 23, hight: 5.2 };
@@ -150,7 +150,7 @@ $.writeln("\nAdd keys of object: ");
 $.writeln(myObj.toString());	// {name: "foo", age: 23, hight: 5.2}
 mySet.from(myObj);
 $.writeln(mySet.toString()); // {"name", "age", "hight"}
-$.writeln("Size: " + mySet.size); // should print 3
+$.writeln("Size: " + mySet.size()); // should print 3
 
 // Test Set.prototype.some() method
 $.writeln("\nTest Set.prototype.some() method");
