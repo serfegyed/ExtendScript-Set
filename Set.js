@@ -25,12 +25,17 @@
  * 
  * Non-standard methods for the Set object:
  * (They are mostly Array-like methods in some stage of tc39 proposal phase)
+ *  TODO: addAll() - Adds elements defined as parameters to the set.
+ *  TODO: addEach() - Adds elements defined as parameters to the set based on the result of a callback function
+ *  TODO: deleteAll() - Removes elements defined as parameters from the set.
+ *  TODO: deleteEach() - Removes elements defined by a callback function from the set.
  *  - every() - Checks if all elements in the set satisfy the provided callback function
  *  - filter() - Filters the elements of a Set object based on a provided callback function
  *  - find() - Finds the first element in the set that satisfies the provided testing function
  *  - from() - Adds values from iterable(s) and/or primitive(s)to the Set.
  *  - isEmpty() - Determines whether the given parameter is an empty Set.
  *  - isSet() - Checks if an object is a Set.
+ *  TODO:join() - Joins all elements of a Set into a string with a given separator
  *  - map() - Applies a callback function to each element in the set and returns a new set with the results.
  *  - reduce() - Reduce the set to a single value by applying a callback function
  *  - some() - Checks if any element in the set satisfies the provided callback function
